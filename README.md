@@ -21,7 +21,7 @@ non-transitive-dice-game/
 Make sure you have **Node.js** installed. Then, clone the repository and install dependencies:
 ```sh
 git clone https://github.com/Rajon-Dash02/Non-transitive-dice.git
-cd non-transitive-dice-game
+cd Non-transitive-dice
 npm install
 ```
 
