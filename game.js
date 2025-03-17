@@ -85,10 +85,9 @@ function main() {
     console.log(`I choose [${diceInputs[aiIndex]}]. Now pick your dice:`);
     let choices = getAvailableDiceChoices(diceInputs, aiIndex);
     choices.forEach((i) => console.log(`${i} - ${diceInputs[i]}`));
-    userDiceIndex =
-      choices[
-        parseInt(getValidUserChoice("Your selection: ", choices.map(String)))
-      ];
+    userDiceIndex = parseInt(
+      getValidUserChoice("Your selection: ", choices.map(String))
+    );
   }
 
   console.log(`You chose [${diceInputs[userDiceIndex]}].`);

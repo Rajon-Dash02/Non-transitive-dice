@@ -18,6 +18,10 @@ function determineFirstMove() {
  * @param {number[]} userDice - User-selected dice.
  */
 function playGame(aiDice, userDice) {
+    if (!Array.isArray(userDice) || userDice.length === 0) {
+        throw new Error("Invalid dice selection. Please choose a valid set.");
+    }
+
     console.log("\nIt's time for my throw.");
     let aiRoll = getThrow(aiDice);
     console.log(`My throw is ${aiRoll}.`);
@@ -40,6 +44,10 @@ function playGame(aiDice, userDice) {
  * @returns {number} - The final throw value.
  */
 function getThrow(dice) {
+    if (!Array.isArray(dice) || dice.length === 0) {
+        throw new Error("Invalid dice array.");
+    }
+
     let { randomValue, key, hmac } = generateModularHMAC(6);
 
     console.log(`I selected a random value in the range 0..5 (HMAC=${hmac}).`);
@@ -49,11 +57,11 @@ function getThrow(dice) {
     let userModValue = getUserInput(["0", "1", "2", "3", "4", "5"], "Your selection: ");
 
     console.log(`My number is ${randomValue} (KEY=${key}).`);
-    let resultIndex = (parseInt(userModValue) + randomValue) % 6;
+    let resultIndex = (parseInt(userModValue) + randomValue) % dice.length;
     let userThrow = dice[resultIndex];
 
-    console.log(`The result is ${randomValue} + ${userModValue} = ${resultIndex} (mod 6).`);
-    console.log(`Your throw is ${userThrow}.`); // ✅ Ensure it's printed once here
+    console.log(`The result is ${randomValue} + ${userModValue} = ${resultIndex} (mod ${dice.length}).`);
+    console.log(`Your throw is ${userThrow}.`);
 
     return userThrow;
 }
@@ -63,31 +71,22 @@ function getThrow(dice) {
  * @param {number} range - The range for random selection.
  * @returns {object} - Random value, key, and HMAC.
  */
-
-//duplication issue
-// function generateModularHMAC(range) {
-//     const key = generateKey();
-//     const randomValue = Math.floor(Math.random() * range);
-//     const hmac = generateHMAC(key, String(randomValue));
-//     return { randomValue, key, hmac };
-// }
-
 function generateModularHMAC(range) {
     if (!Number.isInteger(range) || range <= 0) {
         throw new Error("Range must be a positive integer.");
     }
     const key = generateKey();
-    const randomValue = crypto.getRandomValues(new Uint32Array(1))[0] % range;
+    const randomValue = Math.floor(Math.random() * range);
     const hmac = generateHMAC(key, String(randomValue));
 
-    return { randomValue, key, hmac};
+    return { randomValue, key, hmac };
 }
 
 /**
- * Ensures valid user input
- * @param {string[]} validOptions - Allowed options
- * @param {string} prompt - Input prompt
- * @returns {string} - User's valid choice
+ * Ensures valid user input.
+ * @param {string[]} validOptions - Allowed options.
+ * @param {string} prompt - Input prompt.
+ * @returns {string} - User's valid choice.
  */
 function getUserInput(validOptions, prompt) {
     let input;
