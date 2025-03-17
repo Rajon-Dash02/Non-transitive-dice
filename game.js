@@ -19,18 +19,27 @@ function getAvailableDiceChoices(diceInputs, selectedIndex) {
 function main() {
   const diceInputs = process.argv.slice(2);
 
+  if (diceInputs.length === 0) {
+    console.error("Error: No dice configurations provided.");
+    console.error("Usage: node game.js <dice1> <dice2> [<dice3> ...]");
+    console.error("Example: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3");
+    process.exit(1);
+  }
   if (diceInputs.length < 3) {
     console.error("Error: At least 3 dice configurations are required.");
     console.error("Usage: node game.js <dice1> <dice2> [<dice3> ...]");
     console.error("Example: node game.js 2,2,4,4,9,9 6,8,1,1,8,6 7,5,3,7,5,3");
     process.exit(1);
   }
+  
 
   let diceSets = diceInputs.map((d) => {
     let dice = parseDice(d);
     let errorMsg = validateDice(dice);
     if (errorMsg) {
-      console.error(`Error: Invalid dice configuration: \"${d}\".\n${errorMsg}`);
+      console.error(
+        `Error: Invalid dice configuration: \"${d}\".\n${errorMsg}`
+      );
       process.exit(1);
     }
     return dice;
@@ -47,7 +56,9 @@ function main() {
 
   console.log("\nLet's determine who makes the first move.");
   let { randomChoice, key, hmac } = determineFirstMove();
-  console.log(`I selected a random value (HMAC=${hmac}). Try to guess:\n0 - 0\n1 - 1\nX - exit\n? - help`);
+  console.log(
+    `I selected a random value (HMAC=${hmac}). Try to guess:\n0 - 0\n1 - 1\nX - exit\n? - help`
+  );
 
   let userGuess = getValidUserChoice("Your selection: ", ["0", "1"]);
   console.log(`My selection: ${randomChoice} (KEY=${key}).`);
@@ -56,10 +67,15 @@ function main() {
   let aiIndex, userDiceIndex;
 
   if (firstPlayer === "user") {
-    console.log("You guessed correctly! You get to pick first.\nChoose your dice:");
+    console.log(
+      "You guessed correctly! You get to pick first.\nChoose your dice:"
+    );
     diceInputs.forEach((dice, i) => console.log(`${i} - ${dice}`));
     userDiceIndex = parseInt(
-      getValidUserChoice("Your selection: ", diceInputs.map((_, i) => String(i)))
+      getValidUserChoice(
+        "Your selection: ",
+        diceInputs.map((_, i) => String(i))
+      )
     );
     aiIndex = getAvailableDiceChoices(diceInputs, userDiceIndex)[0];
   } else {
@@ -68,10 +84,11 @@ function main() {
     console.log(`I choose [${diceInputs[aiIndex]}]. Now pick your dice:`);
     let choices = getAvailableDiceChoices(diceInputs, aiIndex);
     choices.forEach((i) => console.log(`${i} - ${diceInputs[i]}`));
-    userDiceIndex = parseInt(getValidUserChoice("Your selection: ", choices.map(String)));
+    userDiceIndex = parseInt(
+      getValidUserChoice("Your selection: ", choices.map(String))
+    );
   }
 
-  //console.log(`You chose [${diceInputs[userDiceIndex]}].`);
   playGame(diceSets[aiIndex], diceSets[userDiceIndex]);
 }
 
