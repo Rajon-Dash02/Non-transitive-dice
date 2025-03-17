@@ -22,12 +22,14 @@ function playGame(aiDice, userDice) {
         throw new Error("Invalid dice selection. Please choose a valid set.");
     }
 
-    console.log("\nIt's time for my throw.");
+    console.log(`\nYou choose the [${userDice.join(',')}] dice.`);
+    console.log("It's time for my roll.");
     let aiRoll = getThrow(aiDice);
-    console.log(`My throw is ${aiRoll}.`);
+    //console.log(`My roll result is ${aiRoll}.`);
 
-    console.log("\nIt's time for your throw.");
+    console.log("\nIt's time for your roll.");
     let userRoll = getThrow(userDice);
+    console.log(`Your roll result is ${userRoll}.`);
 
     if (userRoll > aiRoll) {
         console.log(`You win (${userRoll} > ${aiRoll})! 🎉`);
@@ -48,7 +50,7 @@ function getThrow(dice) {
         throw new Error("Invalid dice array.");
     }
 
-    let { randomValue, key, hmac } = generateModularHMAC(6);
+    let { randomValue, key, hmac } = generateModularHMAC(6); // Keep modulo 6 as in example output
 
     console.log(`I selected a random value in the range 0..5 (HMAC=${hmac}).`);
     console.log("Add your number modulo 6.");
@@ -57,13 +59,13 @@ function getThrow(dice) {
     let userModValue = getUserInput(["0", "1", "2", "3", "4", "5"], "Your selection: ");
 
     console.log(`My number is ${randomValue} (KEY=${key}).`);
-    let resultIndex = (parseInt(userModValue) + randomValue) % dice.length;
-    let userThrow = dice[resultIndex];
+    let resultIndex = (parseInt(userModValue) + randomValue) % 6;
+    let throwValue = dice[resultIndex % dice.length];
 
-    console.log(`The result is ${randomValue} + ${userModValue} = ${resultIndex} (mod ${dice.length}).`);
-    console.log(`Your throw is ${userThrow}.`);
+    console.log(`The fair number generation result is ${randomValue} + ${userModValue} = ${resultIndex} (mod 6).`);
+    console.log(`My roll result is ${throwValue}.`);
 
-    return userThrow;
+    return throwValue;
 }
 
 /**
