@@ -25,7 +25,7 @@ function playGame(aiDice, userDice) {
     console.log(`\nYou choose the [${userDice.join(',')}] dice.`);
     console.log("It's time for my roll.");
     let aiRoll = getThrow(aiDice);
-    //console.log(`My roll result is ${aiRoll}.`);
+    console.log(`My roll result is ${aiRoll}.`);
 
     console.log("\nIt's time for your roll.");
     let userRoll = getThrow(userDice);
@@ -63,7 +63,7 @@ function getThrow(dice) {
     let throwValue = dice[resultIndex % dice.length];
 
     console.log(`The fair number generation result is ${randomValue} + ${userModValue} = ${resultIndex} (mod 6).`);
-    console.log(`My roll result is ${throwValue}.`);
+    //console.log(`My roll result is ${throwValue}.`);
 
     return throwValue;
 }

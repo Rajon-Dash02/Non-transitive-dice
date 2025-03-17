@@ -71,7 +71,7 @@ function main() {
     userDiceIndex = parseInt(getValidUserChoice("Your selection: ", choices.map(String)));
   }
 
-  console.log(`You chose [${diceInputs[userDiceIndex]}].`);
+  //console.log(`You chose [${diceInputs[userDiceIndex]}].`);
   playGame(diceSets[aiIndex], diceSets[userDiceIndex]);
 }
 
